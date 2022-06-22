@@ -1,7 +1,3 @@
-const getAddress = ({ street, number, zip, state, country }) => {
-  return `${number + ' ' || ''}${street + ' ' || ''}${zip + ' ' || ''}${state + ' ' || ''}${country || ''}`;
-};
-
 const rating = (number) => {
   if (number < 1) {
     return '☆☆☆☆☆';
@@ -29,17 +25,16 @@ const rating = (number) => {
 export const dataNormalizer = (data) => {
   let x = [];
   for (let i = 0; i < data.length; i++) {
-    const newData = {
-      ...data[i],
-      full_name: data[i].name.charAt(0).toUpperCase() + data[i].name.slice(1) + ' ' + data[i].full_name.charAt(0).toUpperCase() + data[i].full_name.slice(1),
-      address: getAddress(data[i].address),
-      DoB: Intl.DateTimeFormat('en-GB').format(new Date(data[i].age)),
+    const newData = { ...data[i],
+      // Create full name from first and last name and capitalize all names
+      full_name: data[i].first_name.charAt(0).toUpperCase() + data[i].first_name.slice(1) + ' ' + data[i].last_name.charAt(0).toUpperCase() + data[i].last_name.slice(1),
+      // Create date of birth
+      date_of_birth: Intl.DateTimeFormat('en-GB').format(new Date(data[i].age)),
+      // Get the rating
       rating: rating(data[i].rating)
     };
-
     delete newData.age;
     delete newData.name;
-
     x.push(newData);
   }
   return x;
